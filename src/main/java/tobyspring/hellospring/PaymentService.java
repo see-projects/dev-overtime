@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
  public class PaymentService {
 
-     private WebApiExRateProvider exRateProvider;
+     private ExRateProviderInterface exRateProvider;
 
      public PaymentService() {
          this.exRateProvider = new WebApiExRateProvider();
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
     public Payment prepare(Long orderId, String currency, BigDecimal foreignCurrencyAmount) throws IOException {
         // 환율 가져오기
-        BigDecimal exRate = exRateProvider.getWebApiExRate(currency);
+        BigDecimal exRate = exRateProvider.getExRate(currency);
 
         // 금액 계산
         BigDecimal convertedAmount = foreignCurrencyAmount.multiply(exRate);
