@@ -11,10 +11,17 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-abstract public class PaymentService {
+ public class PaymentService {
+
+     private WebApiExRateProvider exRateProvider;
+
+     public PaymentService() {
+         this.exRateProvider = new WebApiExRateProvider();
+     }
+
     public Payment prepare(Long orderId, String currency, BigDecimal foreignCurrencyAmount) throws IOException {
         // 환율 가져오기
-        BigDecimal exRate = getExRate(currency);
+        BigDecimal exRate = exRateProvider.getWebApiExRate(currency);
 
         // 금액 계산
         BigDecimal convertedAmount = foreignCurrencyAmount.multiply(exRate);
@@ -25,5 +32,5 @@ abstract public class PaymentService {
         return new Payment(orderId, currency, foreignCurrencyAmount, exRate, convertedAmount, validUntil);
     }
 
-    abstract BigDecimal getExRate(String currency) throws IOException;
+
 }
