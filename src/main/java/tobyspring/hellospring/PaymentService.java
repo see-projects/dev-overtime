@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
      private ExRateProviderInterface exRateProvider;
 
-     public PaymentService() {
-         this.exRateProvider = new WebApiExRateProvider();
+     public PaymentService(ExRateProviderInterface providerInterface) {
+         this.exRateProvider = providerInterface;
      }
 
     public Payment prepare(Long orderId, String currency, BigDecimal foreignCurrencyAmount) throws IOException {
