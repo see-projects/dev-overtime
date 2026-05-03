@@ -1,12 +1,18 @@
 package tobyspring.hellospring;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class ObjectFactory {
 
-    public PaymentService paymentService() {
-        return new PaymentService(provider());
-    }
-
-    public ExRateProviderInterface provider() {
-        return new WebApiExRateProvider();
-    }
+//    @Bean
+//    public PaymentService paymentService() {
+//        return new PaymentService(provider());
+//    }
+//
+//    @Bean
+//    public ExRateProviderInterface provider() {
+//        return new WebApiExRateProvider();
+//    }
 }
