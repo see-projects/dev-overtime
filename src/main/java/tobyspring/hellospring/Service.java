@@ -5,12 +5,30 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 
 public class Service {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         BeanFactory factory = new AnnotationConfigApplicationContext(ObjectFactory.class);
         PaymentService paymentService = factory.getBean(PaymentService.class);
-        Payment payment = paymentService.prepare(100L, "USD", BigDecimal.valueOf(50.7));
-        System.out.println(payment);
+
+        Payment payment1 = paymentService.prepare(100L, "USD", BigDecimal.valueOf(50.7));
+        System.out.println("Payment1: " + payment1);
+        System.out.println("---------------------------------------------------\n");
+
+
+        TimeUnit.SECONDS.sleep(1);
+
+
+        Payment payment2 = paymentService.prepare(100L, "USD", BigDecimal.valueOf(50.7));
+        System.out.println("Payment2: " + payment2);
+        System.out.println("---------------------------------------------------\n");
+
+        TimeUnit.SECONDS.sleep(3);
+
+        Payment payment3 = paymentService.prepare(100L, "USD", BigDecimal.valueOf(50.7));
+        System.out.println("Payment3: " + payment3);
+        System.out.println("---------------------------------------------------\n");
+
     }
 }
