@@ -1,4 +1,4 @@
-package tobyspring.hellospring;
+package tobyspring.hellospring.exrate;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Component
 @Primary
