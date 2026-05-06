@@ -1,7 +1,9 @@
 package tobyspring.hellospring.payment;
 
+
 import java.io.IOException;
 import java.math.BigDecimal;
+
 
 public class ExRateProviderStub implements ExRateProviderInterface{
     private BigDecimal exRate;
@@ -13,7 +15,6 @@ public class ExRateProviderStub implements ExRateProviderInterface{
     public void setExRate(BigDecimal exRate) {
         this.exRate = exRate;
     }
-
 
     public ExRateProviderStub(BigDecimal exRate) {
         this.exRate = exRate;
