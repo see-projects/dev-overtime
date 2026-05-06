@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Service {
     public static void main(String[] args) throws IOException, InterruptedException {
-        BeanFactory factory = new AnnotationConfigApplicationContext(ObjectFactory.class);
+        BeanFactory factory = new AnnotationConfigApplicationContext(PaymentConfig.class);
         PaymentService paymentService = factory.getBean(PaymentService.class);
 
         Payment payment1 = paymentService.prepare(100L, "USD", BigDecimal.valueOf(50.7));
