@@ -23,6 +23,14 @@ public class ApiTemplate {
         return this.getExRate(url, this.apiExecutor, this.exRateExtractor);
     }
 
+    public BigDecimal getExRate(String url, ApiExecutor apiExecutor) {
+        return this.getExRate(url, apiExecutor, this.exRateExtractor);
+    }
+
+    public BigDecimal getExRate(String url, ExRateExtractor exRateExtractor) {
+        return this.getExRate(url, this.apiExecutor, exRateExtractor);
+    }
+
     public BigDecimal getExRate(String url, ApiExecutor executor, ExRateExtractor extractExRate) {
         URI uri;
         try {
