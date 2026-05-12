@@ -2,6 +2,7 @@ package tobyspring.hellospring.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 import tobyspring.hellospring.exrate.ErApiExRateExtractor;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+@Component
 public class ApiTemplate {
 
     private final ApiExecutor apiExecutor;
