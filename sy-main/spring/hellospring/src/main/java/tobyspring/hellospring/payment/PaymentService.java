@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
          this.clock = clock;
      }
 
-    public Payment prepare(Long orderId, String currency, BigDecimal foreignCurrencyAmount) throws IOException {
+    public Payment prepare(Long orderId, String currency, BigDecimal foreignCurrencyAmount) {
         // 환율 가져오기
         BigDecimal exRate = exRateProvider.getExRate(currency);
 

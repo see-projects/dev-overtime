@@ -17,7 +17,7 @@ class PaymentServiceTest {
 
     @Test
     @DisplayName("prepare 메서드가 요구사항 3가지를 잘 충족하는 지 검증")
-    void prepare() throws IOException {
+    void prepare() {
 
         ClockProvider clockProvider = new ClockProvider(Clock.fixed(Instant.now(), ZoneId.systemDefault()));
 
@@ -28,7 +28,7 @@ class PaymentServiceTest {
     }
 
     @Test
-    void validUntil() throws IOException {
+    void validUntil() {
         ClockProvider clockProvider = new ClockProvider(Clock.fixed(Instant.now(), ZoneId.systemDefault()));
 
         PaymentService paymentService = new PaymentService(new ExRateProviderStub(BigDecimal.valueOf(1_000)), clockProvider);
@@ -43,7 +43,7 @@ class PaymentServiceTest {
     }
 
 
-    private static void getPayment(BigDecimal exRate, BigDecimal convertedAmount, ClockProvider clock) throws IOException {
+    private static void getPayment(BigDecimal exRate, BigDecimal convertedAmount, ClockProvider clock) {
         PaymentService paymentService = new PaymentService(new ExRateProviderStub(exRate), clock);
 
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);

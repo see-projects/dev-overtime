@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 public class Service {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         BeanFactory factory = new AnnotationConfigApplicationContext(PaymentConfig.class);
         PaymentService paymentService = factory.getBean(PaymentService.class);
 

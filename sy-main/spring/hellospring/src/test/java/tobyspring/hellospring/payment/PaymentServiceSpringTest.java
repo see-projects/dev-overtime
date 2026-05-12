@@ -26,7 +26,7 @@ class PaymentServiceSpringTest {
 
     @Test
     @DisplayName("prepare 메서드가 요구사항 3가지를 잘 충족하는 지 검증")
-    void convertedAmount() throws IOException {
+    void convertedAmount() {
         // exRate : 1000
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
 
@@ -43,7 +43,7 @@ class PaymentServiceSpringTest {
 
     @Test
     @DisplayName("prepare 메서드의 유효시간 검증")
-    void validUntil() throws IOException {
+    void validUntil() {
         PaymentService paymentService = new PaymentService(new ExRateProviderStub(BigDecimal.valueOf(1_000)), clockProvider);
 
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
