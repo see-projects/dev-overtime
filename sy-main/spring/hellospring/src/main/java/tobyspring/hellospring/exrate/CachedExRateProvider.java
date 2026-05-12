@@ -18,7 +18,7 @@ public class CachedExRateProvider implements ExRateProviderInterface {
     private BigDecimal cachedExRate;
     private LocalDateTime cachedExpiryTime;
 
-    public CachedExRateProvider( @Qualifier("webApiExRateProvider")ExRateProviderInterface exRateProvider) {
+    public CachedExRateProvider( @Qualifier("restTemplateExRateProvider")ExRateProviderInterface exRateProvider) {
         this.exRateProvider = exRateProvider;
     }
 

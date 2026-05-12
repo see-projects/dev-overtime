@@ -16,7 +16,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-@Component
 public class WebApiExRateProvider implements ExRateProviderInterface {
     // 재사용성 좋게 상위에 위치시키기(템플릿이라 변경 가능성이 적어 멀티 스레드 환경에서도 문제없이 동작할 확률이 높음)
     private final ApiTemplate apiTemplate;
