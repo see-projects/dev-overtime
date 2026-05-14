@@ -17,7 +17,7 @@ public class PaymentConfig {
     }
 
     @Bean
-    public RestTemplate restTemplate() {return new RestTemplate(new JdkClientHttpRequestFactory());}
+    public RestTemplate restTemplate() {return new RestTemplate();}
 
 //    @Bean
 //    public PaymentService paymentService() {
