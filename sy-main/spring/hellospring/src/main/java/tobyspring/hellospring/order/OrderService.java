@@ -2,6 +2,7 @@ package tobyspring.hellospring.order;
 
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
@@ -11,10 +12,10 @@ public class OrderService {
     // 해당 리포지토리가 JPA 기술에 의존
     private OrderRepository orderRepository;
     // 트랜잭션도 JPA 기술에 의존
-    private JpaTransactionManager transactionManager;
+    private PlatformTransactionManager transactionManager;
 
 
-    public OrderService(OrderRepository orderRepository, JpaTransactionManager  transactionManager) {
+    public OrderService(OrderRepository orderRepository, PlatformTransactionManager transactionManager) {
         this.orderRepository = orderRepository;
         this.transactionManager = transactionManager;
     }
