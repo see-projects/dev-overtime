@@ -1,11 +1,13 @@
 package tobyspring.hellospring.order;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
     // 해당 리포지토리가 JPA 기술에 의존
     private OrderRepository orderRepository;
