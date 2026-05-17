@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tobyspring.hellospring.OrderConfig;
-import tobyspring.hellospring.TestPaymentConfig;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
