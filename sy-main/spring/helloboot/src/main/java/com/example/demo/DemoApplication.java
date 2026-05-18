@@ -33,6 +33,9 @@ public class DemoApplication {
     public static void main(String[] args) {
         ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
         WebServer webServer = serverFactory.getWebServer(servletContext -> {
+
+            HelloController helloController = new HelloController();
+
             servletContext.addServlet("frontcontroller", new HttpServlet() {
                 @Override
                 protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,10 +44,11 @@ public class DemoApplication {
 
                     String name = req.getParameter("name");
 
+                        String hello = helloController.hello(name);
 
-                    resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+                        resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
                     resp.setStatus(200);
-                    resp.getWriter().println("<h1>Hello " + name + "World!</h1>");
+                    resp.getWriter().println(hello);
                     }
                     else if(req.getRequestURI().equals("/users")) {
                         //
