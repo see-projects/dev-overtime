@@ -23,9 +23,11 @@ public class ConfigurationTest {
     }
 
     static class MyConfigProxy extends MyConfig {
+        private Common common;
+
         @Override
         Common common() {
-            if (this.common == null) this.comon = super.common();
+            if (this.common == null) this.common = super.common();
 
             return this.common;
         }
@@ -64,4 +66,6 @@ public class ConfigurationTest {
             this.common = common;
         }
     }
+
+    static class Common {};
 }
