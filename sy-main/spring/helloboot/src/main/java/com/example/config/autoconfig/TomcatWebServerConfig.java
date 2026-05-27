@@ -17,16 +17,17 @@ import org.springframework.util.ClassUtils;
 @MyAutoConfiguration
 @ConditionalMyOnClass("org.apache.catalina.startup.Tomcat")
 public class TomcatWebServerConfig {
-    @Value("${contextPath}")
-    String contextPath;
 
     @Bean("TomcatWebServerConfig")
     @ConditionalOnMissingBean
-    public ServletWebServerFactory servletContainer() {
+    public ServletWebServerFactory servletContainer(ServerProperties serverProperties) {
         TomcatServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
 
-        serverFactory.setContextPath(contextPath);
+        serverFactory.setContextPath(serverProperties.getContextPath());
+        serverFactory.setPort(serverProperties.getPort());
         return serverFactory;
 
     }
+
+
 }
