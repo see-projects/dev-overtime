@@ -23,14 +23,6 @@ public class DemoApplication {
 //        MySpringApplication.run(HelloConfig.class, args);
 //    }
 
-    @Bean
-    ApplicationRunner applicationRunner(Environment environment) {
-        return args -> {
-            String name = environment.getProperty("my.name");
-            System.out.println("name" + name);
-        };
-    }
-
     // 기본 SpringApplication.run start 코드랑 동일한 형태가 됨
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);

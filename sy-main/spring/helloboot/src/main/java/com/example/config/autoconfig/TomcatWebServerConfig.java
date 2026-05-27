@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.util.ClassUtils;
 
@@ -17,7 +18,10 @@ import org.springframework.util.ClassUtils;
 public class TomcatWebServerConfig {
     @Bean("TomcatWebServerConfig")
     @ConditionalOnMissingBean
-    public ServletWebServerFactory servletContainer() {
-        return new TomcatServletWebServerFactory();
+    public ServletWebServerFactory servletContainer(Environment environment) {
+        TomcatServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
+        serverFactory.setContextPath(environment.getProperty("contextPath"));
+        return serverFactory;
+
     }
 }
