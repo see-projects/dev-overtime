@@ -13,7 +13,7 @@ import java.util.Map;
 @MyAutoConfiguration
 public class PropertyPostProcessing {
     @Bean
-    BeanPostProcessor beanPostProcessor(Environment environment) {
+    static BeanPostProcessor beanPostProcessor(Environment environment) {
         return new BeanPostProcessor() {
             @Override
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
