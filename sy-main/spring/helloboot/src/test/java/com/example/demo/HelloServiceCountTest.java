@@ -3,11 +3,14 @@ package com.example.demo;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.IntStream;
 
-@HellobootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@Transactional
 public class HelloServiceCountTest {
     @Autowired HelloService helloService;
 //    @Autowired JdbcTemplate jdbcTemplate;
@@ -17,7 +20,7 @@ public class HelloServiceCountTest {
     void sayHelloIncreaseCount() {
         IntStream.rangeClosed(1, 10).forEach(count -> {
             helloService.sayHello("Toby");
-            Assertions.assertThat(helloRepository.countOf("Toby")).isEqualTo(1);
+            Assertions.assertThat(helloRepository.countOf("Toby")).isEqualTo(count);
         });
     }
 }
