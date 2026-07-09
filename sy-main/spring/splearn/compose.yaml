@@ -1,0 +1,11 @@
+services:
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=splearn'
+      - 'MYSQL_PASSWORD=secret'
+      - 'MYSQL_ROOT_PASSWORD=verysecret'
+      - 'MYSQL_USER=spring'
+    ports:
+#      지금 이 포트는 도커 안에 있는 MySql 접속 포트, 여기서 들어가려면 docker에 접근하는 포트 번호가 필요함
+      - '3306:3306'
