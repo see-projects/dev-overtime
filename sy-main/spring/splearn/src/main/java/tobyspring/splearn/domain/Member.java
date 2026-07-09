@@ -1,8 +1,11 @@
 package tobyspring.splearn.domain;
 
 import lombok.Getter;
+import org.springframework.util.Assert;
 
 import java.util.Objects;
+
+import static org.springframework.util.Assert.*;
 
 @Getter
 public class Member {
@@ -27,21 +30,23 @@ public class Member {
     }
 
     public void active() {
+        state(this.status == Status.PENDING, "대기 상태가 아닙니다");
+
         this.status = Status.ACTIVE;
     }
 
     public void deactive() {
-        if(this.status == Status.ACTIVE) {
+        state(this.status == Status.ACTIVE, "Member is already deactivated");
             this.status = Status.DEACTIVATED;
-        }
+
     }
 
     public boolean verifyPassword(String password, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(password, this.passwordHash);
     }
 
-    public String changePassword(String password, PasswordEncoder passwordEncoder) {
-        return this.passwordHash = passwordEncoder.encode(password);
+    public void changePassword(String password, PasswordEncoder passwordEncoder) {
+        this.passwordHash = passwordEncoder.encode(password);
     }
 
 

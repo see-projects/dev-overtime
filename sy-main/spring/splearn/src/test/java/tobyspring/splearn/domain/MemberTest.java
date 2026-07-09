@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.*;
+
 public class MemberTest {
     Member member;
     PasswordEncoder passwordEncoder;
@@ -26,12 +28,12 @@ public class MemberTest {
 
     @Test
     public void createMember() {
-        Assertions.assertThat(member.getNickname()).isEqualTo("nick");
+        assertThat(member.getNickname()).isEqualTo("nick");
     }
 
     @Test
     public void createMemberfail() {
-        Assertions.assertThatThrownBy(() -> {
+        assertThatThrownBy(() -> {
             Member.create(new MemberCreateRequest("qwe123@splearn.app", null, "secret"), passwordEncoder);
         }).isInstanceOf(NullPointerException.class);
     }
@@ -40,7 +42,7 @@ public class MemberTest {
     public void memberActive() {
         member.active();
 
-        Assertions.assertThat(member.getStatus()).isEqualTo(Status.ACTIVE);
+        assertThat(member.getStatus()).isEqualTo(Status.ACTIVE);
     }
 
     @Test
@@ -48,23 +50,23 @@ public class MemberTest {
         member.active();
 
         member.deactive();
-        Assertions.assertThat(member.getStatus()).isEqualTo(Status.DEACTIVATED);
+        assertThat(member.getStatus()).isEqualTo(Status.DEACTIVATED);
     }
 
     @Test
     public void memberPasswordCheck() {
-        Assertions.assertThat(member.verifyPassword("secret", passwordEncoder)).isTrue();
+        assertThat(member.verifyPassword("secret", passwordEncoder)).isTrue();
     }
 
     @Test
     public void memberPasswordChange() {
         member.changePassword("pppp", passwordEncoder);
-        Assertions.assertThat(member.verifyPassword("pppp", passwordEncoder)).isTrue();
+        assertThat(member.verifyPassword("pppp", passwordEncoder)).isTrue();
     }
 
     @Test
     void invalidEmail() {
-        Assertions.assertThatThrownBy(() ->
+        assertThatThrownBy(() ->
                 Member.create(new MemberCreateRequest("invalid email", "Toby", "secret"), passwordEncoder)
         ).isInstanceOf(IllegalArgumentException.class);
 
