@@ -1,29 +1,40 @@
 package tobyspring.splearn.domain;
 
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
-import org.springframework.util.Assert;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.NaturalIdCache;
 
-import java.util.Objects;
+import static java.util.Objects.*;
+import static org.springframework.util.Assert.state;
 
-import static org.springframework.util.Assert.*;
-
+@Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NaturalIdCache
 public class Member {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Embedded
+    @NaturalId
     private Email email;
 
     private String nickname;
 
     private String passwordHash;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
-    public static Member create(MemberCreateRequest memberCreateRequest, PasswordEncoder passwordEncoder) {
+    public static Member register(MemberRegisterRequest memberCreateRequest, PasswordEncoder passwordEncoder) {
         Member member = new Member();
 
         member.email = new Email(memberCreateRequest.email());
-        member.nickname = Objects.requireNonNull(memberCreateRequest.nickname());
-        member.passwordHash = Objects.requireNonNull(passwordEncoder.encode(memberCreateRequest.passwordHash()));
+        member.nickname = requireNonNull(memberCreateRequest.nickname());
+        member.passwordHash = requireNonNull(passwordEncoder.encode(memberCreateRequest.password()));
         member.status = Status.PENDING;
 
         return member;
@@ -46,7 +57,7 @@ public class Member {
     }
 
     public void changePassword(String password, PasswordEncoder passwordEncoder) {
-        this.passwordHash = passwordEncoder.encode(password);
+        this.passwordHash = passwordEncoder.encode(requireNonNull(password));
     }
 
 
