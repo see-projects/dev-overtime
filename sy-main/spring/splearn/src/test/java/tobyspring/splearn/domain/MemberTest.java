@@ -21,7 +21,7 @@ public class MemberTest {
 
     @Test
     public void createMember() {
-        assertThat(member.getNickname()).isEqualTo("nick");
+        assertThat(member.getNickname()).isEqualTo("nick123");
     }
 
     @Test
