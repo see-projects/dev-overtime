@@ -32,7 +32,7 @@ class MemberRepositoryTest {
     @BeforeEach
     void setUp() {
         this.passwordEncoder = createPasswordEncoder();
-        this.member = Member.register(createMemberRequest("toby@naver.com"),  passwordEncoder);
+        this.member = Member.register(createMemberRequest("toby@splearn.app"),  passwordEncoder);
     }
 
     @Test
