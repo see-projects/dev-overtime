@@ -17,9 +17,7 @@ import static org.springframework.util.Assert.state;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @NaturalIdCache
-public class Member {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Member extends AbstractEntity {
 
     @Embedded
     @NaturalId
