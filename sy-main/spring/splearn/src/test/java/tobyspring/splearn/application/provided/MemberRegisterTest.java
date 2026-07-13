@@ -1,5 +1,6 @@
 package tobyspring.splearn.application.provided;
 
+import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Import(SplearnTestConfiguration.class)
 @Transactional
-public record MemberRegisterTest(MemberRegister memberRegister) {
+public record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
 //    @Autowired
 //    private MemberRegister register;
 
@@ -25,6 +26,19 @@ public record MemberRegisterTest(MemberRegister memberRegister) {
 
         assertThat(member.getId()).isNotNull();
         assertThat(member.getStatus()).isEqualTo(Status.PENDING);
+    }
+
+    @Test
+    void activate() {
+        Member member = memberRegister.register(MemberFixture.createMemberRequest());
+        entityManager.flush();
+        entityManager.clear();
+
+        member = memberRegister.activate(member.getId());
+
+        entityManager.flush();
+
+        assertThat(member.getStatus()).isEqualTo(Status.ACTIVE);
     }
 
     @Test

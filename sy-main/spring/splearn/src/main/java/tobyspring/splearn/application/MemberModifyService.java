@@ -4,16 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import tobyspring.splearn.application.provided.MemberFinder;
 import tobyspring.splearn.application.provided.MemberRegister;
 import tobyspring.splearn.application.required.EmailSender;
 import tobyspring.splearn.application.required.MemberRepository;
 import tobyspring.splearn.domain.*;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 @Validated
-public class MemberService implements MemberRegister {
+@RequiredArgsConstructor
+public class MemberModifyService implements MemberRegister {
+    private final MemberFinder memberFinder;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
@@ -35,12 +37,21 @@ public class MemberService implements MemberRegister {
         return member;
     }
 
+    @Override
+    public Member activate(Long memberId) {
+        Member member = memberFinder.findById(memberId);
+
+        member.active();
+
+        return memberRepository.save(member);
+    }
+
     private void sendWelcomeEmail(Member member) {
         emailSender.send(member.getEmail(), "등록을 완료해주세요", "등록을 완료해줘");
     }
 
     private void checkDuplicateEmail(MemberRegisterRequest registerRequest) {
-        if(memberRepository.findByEmail(new Email(registerRequest.email())).isPresent()) {
+        if (memberRepository.findByEmail(new Email(registerRequest.email())).isPresent()) {
             throw new DuplicateEmailException("이미 사용 중인 이메일 입니다 : " + registerRequest.email());
         }
         ;

@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
-import tobyspring.splearn.application.MemberService;
+import tobyspring.splearn.application.MemberModifyService;
 import tobyspring.splearn.application.required.EmailSender;
 import tobyspring.splearn.application.required.MemberRepository;
 import tobyspring.splearn.domain.Email;
@@ -23,7 +23,8 @@ import static org.mockito.ArgumentMatchers.eq;
 class MemberRegisterManualTest {
     @Test
     void registertestStub() {
-        MemberRegister register = new MemberService(
+        MemberRegister register = new MemberModifyService(
+                new MemberFinderStub(),
                 new MemberRegisterStub(),
                 MemberFixture.createPasswordEncoder(),
                 new EmailSenderStub()
@@ -39,7 +40,8 @@ class MemberRegisterManualTest {
     void registertestMock() {
         EmailSenderMock emailSenderMock = new EmailSenderMock();
 
-        MemberRegister register = new MemberService(
+        MemberRegister register = new MemberModifyService(
+                new MemberFinderStub(),
                 new MemberRegisterStub(),
                 MemberFixture.createPasswordEncoder(),
                 emailSenderMock
@@ -58,7 +60,8 @@ class MemberRegisterManualTest {
     void registertestMockito() {
         EmailSender emailSenderMock = Mockito.mock(EmailSender.class);
 
-        MemberRegister register = new MemberService(
+        MemberRegister register = new MemberModifyService(
+                new MemberFinderStub(),
                 new MemberRegisterStub(),
                 MemberFixture.createPasswordEncoder(),
                 emailSenderMock
@@ -83,6 +86,11 @@ class MemberRegisterManualTest {
         public Optional<Member> findByEmail(Email email) {
             return Optional.empty();
         }
+
+        @Override
+        public Optional<Member> findById(Long memberId) {
+            return Optional.empty();
+        }
     }
 
     static class EmailSenderStub implements EmailSender {
@@ -99,6 +107,13 @@ class MemberRegisterManualTest {
         @Override
         public void send(Email email, String subject, String body) {
             tos.add(email);
+        }
+    }
+
+    static class MemberFinderStub implements MemberFinder {
+        @Override
+        public Member findById(Long memberId) {
+            return null;
         }
     }
 }
