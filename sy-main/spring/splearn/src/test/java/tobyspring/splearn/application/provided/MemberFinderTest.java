@@ -9,9 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import tobyspring.splearn.SplearnTestConfiguration;
 import tobyspring.splearn.domain.Member;
 import tobyspring.splearn.domain.MemberFixture;
-import tobyspring.splearn.domain.MemberRegisterRequest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
