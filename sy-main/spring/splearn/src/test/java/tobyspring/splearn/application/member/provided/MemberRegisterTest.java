@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 @Import(SplearnTestConfiguration.class)
 @Transactional
-record MemberRegisterTest(tobyspring.splearn.application.member.provided.MemberRegister memberRegister, EntityManager entityManager) {
+record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
 //    @Autowired
 //    private MemberRegister register;
 
@@ -41,6 +41,24 @@ record MemberRegisterTest(tobyspring.splearn.application.member.provided.MemberR
     }
 
     @Test
+    void deactivate() {
+        Member member = memberRegister.register(MemberFixture.createMemberRequest());
+        entityManager.flush();
+        entityManager.clear();
+
+        member = memberRegister.activate(member.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        member = memberRegister.deactivate(member.getId());
+
+        entityManager.flush();
+
+        assertThat(member.getStatus()).isEqualTo(Status.DEACTIVATED);
+        assertThat(member.getMemberDetail().getDeactivatedAt()).isNotNull();
+    }
+
+    @Test
     void duplicateEmail() {
         memberRegister.register(MemberFixture.createMemberRequest());
 
@@ -63,6 +81,23 @@ record MemberRegisterTest(tobyspring.splearn.application.member.provided.MemberR
         var member = new MemberRegisterRequest("toby@splearn.app", "Goby123", "secret");
         Member member1 = memberRegister.register(member);
         assertThat(member1.getId()).isNotNull();
+    }
+
+    @Test
+    void updateInfo() {
+        Member member = memberRegister.register(MemberFixture.createMemberRequest());
+
+        assertThat(member.getId()).isNotNull();
+
+        memberRegister.activate((member.getId()));
+
+        var memberInfoUpdateRequest = new MemberInfoUpdateRequest("toby123", "qwe123", "it's me Mario");
+        Member member1 = memberRegister.updateInfo(member.getId(), memberInfoUpdateRequest);
+
+        assertThat(member1.getNickname()).isEqualTo("toby123");
+        assertThat(member1.getMemberDetail().getProfile().address()).isEqualTo("qwe123");
+        assertThat(member1.getMemberDetail().getIntroduction()).isEqualTo("it's me Mario");
+
     }
 
 }
