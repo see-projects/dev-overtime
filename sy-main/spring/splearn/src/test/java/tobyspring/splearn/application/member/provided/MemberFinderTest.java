@@ -1,4 +1,4 @@
-package tobyspring.splearn.application.provided;
+package tobyspring.splearn.application.member.provided;
 
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
@@ -7,13 +7,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 import tobyspring.splearn.SplearnTestConfiguration;
-import tobyspring.splearn.domain.Member;
-import tobyspring.splearn.domain.MemberFixture;
+import tobyspring.splearn.domain.member.Member;
+import tobyspring.splearn.domain.member.MemberFixture;
 
 @SpringBootTest
 @Transactional
 @Import(SplearnTestConfiguration.class)
-record MemberFinderTest(MemberFinder finder, MemberRegister memberRegister, EntityManager entityManager) {
+record MemberFinderTest(tobyspring.splearn.application.member.provided.MemberFinder finder, tobyspring.splearn.application.member.provided.MemberRegister memberRegister, EntityManager entityManager) {
     @Test
     void findById() {
         Member member = memberRegister.register(MemberFixture.createMemberRequest());
