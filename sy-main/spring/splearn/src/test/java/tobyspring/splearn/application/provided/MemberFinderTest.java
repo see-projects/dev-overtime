@@ -27,6 +27,8 @@ record MemberFinderTest(MemberFinder finder, MemberRegister memberRegister, Enti
 
     @Test
     void findByIdFail() {
-        Assertions.assertThatThrownBy(() -> finder.findById(123456L)).isInstanceOf(IllegalArgumentException.class);
+        Assertions.assertThatThrownBy(() -> {
+            finder.findById(123456L);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 }
