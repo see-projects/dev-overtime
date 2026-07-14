@@ -1,9 +1,6 @@
 package tobyspring.splearn.domain.member;
 
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +20,10 @@ public class MemberDetail extends AbstractEntity {
     @Embedded
     private Profile profile;
 
+    @Column(columnDefinition = "TEXT")
     private String introduction;
 
+    @Column(nullable = false)
     private LocalDateTime registeredAt;
 
     private LocalDateTime activatedAt;

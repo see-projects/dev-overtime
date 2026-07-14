@@ -2,6 +2,7 @@ package tobyspring.splearn.domain.member;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,15 +27,13 @@ public class Member extends AbstractEntity {
     @NaturalId
     private Email email;
 
-//    @Basic(optional = false)
+    //    @Basic(optional = false)
     private String nickname;
 
     private String passwordHash;
 
     private Status status;
 
-    // 케스케이드를 통해서 Member에 대한 작업 시 MemberDetail에도 항상 적용되도록
-    @OneToOne(cascade = CascadeType.ALL)
     private MemberDetail memberDetail;
 
     public static Member register(MemberRegisterRequest memberCreateRequest, PasswordEncoder passwordEncoder) {
