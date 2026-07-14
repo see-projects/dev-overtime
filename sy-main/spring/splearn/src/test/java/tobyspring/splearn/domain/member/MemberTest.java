@@ -22,6 +22,7 @@ public class MemberTest {
     @Test
     public void createMember() {
         assertThat(member.getNickname()).isEqualTo("nick123");
+        assertThat(member.getMemberDetail().getRegisteredAt()).isNotNull();
     }
 
     @Test
@@ -36,6 +37,7 @@ public class MemberTest {
         member.active();
 
         assertThat(member.getStatus()).isEqualTo(Status.ACTIVE);
+        assertThat(member.getMemberDetail().getActivatedAt()).isNotNull();
     }
 
     @Test
@@ -44,6 +46,7 @@ public class MemberTest {
 
         member.deactive();
         assertThat(member.getStatus()).isEqualTo(Status.DEACTIVATED);
+        assertThat(member.getMemberDetail().getDeactivatedAt()).isNotNull();
     }
 
     @Test
@@ -64,5 +67,19 @@ public class MemberTest {
         ).isInstanceOf(IllegalArgumentException.class);
 
         Member.register(createMemberRequest(), passwordEncoder);
+    }
+
+    @Test
+    void updateInfo() {
+        member.active();
+
+        assertThat(member.getMemberDetail().getActivatedAt()).isNotNull();
+
+        member.updateInfo(new MemberInfoUpdateRequest("lee", "itsb", "ㄴㅏㅇㅑ"));
+
+        assertThat(member.getNickname()).isEqualTo("lee");
+
+        assertThat(member.getMemberDetail().getProfile().address()).isEqualTo("itsb");
+        assertThat(member.getMemberDetail().getIntroduction()).isEqualTo("ㄴㅏㅇㅑ");
     }
 }

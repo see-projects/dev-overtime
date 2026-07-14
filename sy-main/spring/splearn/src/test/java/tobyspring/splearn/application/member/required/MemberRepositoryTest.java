@@ -40,6 +40,10 @@ class MemberRepositoryTest {
         assertThat(member.getId()).isNotNull();
 
         entityManager.flush();
+        entityManager.clear();
+
+        var found = memberRepository.findById(member.getId()).orElseThrow();
+        assertThat(found.getMemberDetail().getRegisteredAt()).isNotNull();
     }
 
     @Test
