@@ -7,10 +7,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 import tobyspring.splearn.application.member.MemberModifyService;
 import tobyspring.splearn.application.member.required.EmailSender;
 import tobyspring.splearn.application.member.required.MemberRepository;
-import tobyspring.splearn.domain.shared.Email;
 import tobyspring.splearn.domain.member.Member;
 import tobyspring.splearn.domain.member.MemberFixture;
+import tobyspring.splearn.domain.member.Profile;
 import tobyspring.splearn.domain.member.Status;
+import tobyspring.splearn.domain.shared.Email;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +90,11 @@ class MemberRegisterManualTest {
 
         @Override
         public Optional<Member> findById(Long memberId) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Member> findByProfile(Profile profile) {
             return Optional.empty();
         }
     }

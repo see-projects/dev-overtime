@@ -1,11 +1,11 @@
 package tobyspring.splearn.application.member.provided;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 import tobyspring.splearn.SplearnTestConfiguration;
 import tobyspring.splearn.domain.member.*;
 
@@ -13,11 +13,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@Import(SplearnTestConfiguration.class)
 @Transactional
+@Import(SplearnTestConfiguration.class)
 record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
-//    @Autowired
-//    private MemberRegister register;
 
     @Test
     void register() {
@@ -28,76 +26,107 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
     }
 
     @Test
+    void duplicateEmailFail() {
+        memberRegister.register(MemberFixture.createMemberRequest());
+
+        assertThatThrownBy(() -> memberRegister.register(MemberFixture.createMemberRequest()))
+                .isInstanceOf(DuplicateEmailException.class);
+
+    }
+
+    @Test
     void activate() {
-        Member member = memberRegister.register(MemberFixture.createMemberRequest());
-        entityManager.flush();
-        entityManager.clear();
+        Member member = registerMember();
 
         member = memberRegister.activate(member.getId());
-
         entityManager.flush();
 
         assertThat(member.getStatus()).isEqualTo(Status.ACTIVE);
+        assertThat(member.getMemberDetail().getActivatedAt()).isNotNull();
+    }
+
+    private Member registerMember() {
+        Member member = memberRegister.register(MemberFixture.createMemberRequest());
+        entityManager.flush();
+        entityManager.clear();
+        return member;
+    }
+
+    private Member registerMember(String email) {
+        Member member = memberRegister.register(MemberFixture.createMemberRequest(email));
+        entityManager.flush();
+        entityManager.clear();
+        return member;
     }
 
     @Test
     void deactivate() {
-        Member member = memberRegister.register(MemberFixture.createMemberRequest());
-        entityManager.flush();
-        entityManager.clear();
+        Member member = registerMember();
 
-        member = memberRegister.activate(member.getId());
+        memberRegister.activate(member.getId());
         entityManager.flush();
         entityManager.clear();
 
         member = memberRegister.deactivate(member.getId());
-
-        entityManager.flush();
 
         assertThat(member.getStatus()).isEqualTo(Status.DEACTIVATED);
         assertThat(member.getMemberDetail().getDeactivatedAt()).isNotNull();
     }
 
     @Test
-    void duplicateEmail() {
-        memberRegister.register(MemberFixture.createMemberRequest());
+    void updateInfo() {
+        Member member = registerMember();
 
-        assertThatThrownBy(() -> memberRegister.register(MemberFixture.createMemberRequest())).isInstanceOf(DuplicateEmailException.class);
+        memberRegister.activate(member.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        member = memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("Peter", "toby100", "자기소개"));
+
+        assertThat(member.getMemberDetail().getProfile().address()).isEqualTo("toby100");
+    }
+
+    @Test
+    void updateInfoFail() {
+        Member member = registerMember();
+        memberRegister.activate(member.getId());
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("peter", "toby100", "자기소개"));
+
+        Member member2 = registerMember("toby2@splearn.app");
+        memberRegister.activate(member2.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        // member2는 기존의 member와 같은 프로필 주소를 사용할 수 없다
+        assertThatThrownBy(() -> {
+            memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("James", "toby100", "Introduction"));
+        }).isInstanceOf(DuplicateProfileException.class);
+
+        // 다른 프로필 주소로는 변경 가능
+        memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("James", "toby101", "Introduction"));
+
+        // 기존 프로필 주소를 바꾸는 것도 가능
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("James", "toby100", "Introduction"));
+
+        // 프로필 주소를 제거하는 것도 가능
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("James", "", "Introduction"));
+
+        // 프로필 주소 중복는 허용하지 않음
+        assertThatThrownBy(() -> {
+            memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("James", "toby101", "Introduction"));
+        }).isInstanceOf(DuplicateProfileException.class);
+
     }
 
     @Test
     void memberRegisterRequestFail() {
-        checkValidation(new MemberRegisterRequest("toby@splearn.app", "Goby", "secret"));
-        checkValidation(new MemberRegisterRequest("toby@splearn.app", "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG", "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"));
-        checkValidation(new MemberRegisterRequest("toby@splearn.app", "GGobyG", "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"));
+        checkValidation(new MemberRegisterRequest("toby@splearn.app", "Toby", "longsecret"));
+        checkValidation(new MemberRegisterRequest("toby@splearn.app", "Charlie_____________________________", "longsecret"));
+        checkValidation(new MemberRegisterRequest("tobysplearn.app", "Charlie", "longsecret"));
     }
 
     private void checkValidation(MemberRegisterRequest invalid) {
-        assertThatThrownBy(() -> memberRegister.register(invalid)).isInstanceOf(ConstraintViolationException.class);
+        assertThatThrownBy(() -> memberRegister.register(invalid))
+                .isInstanceOf(ConstraintViolationException.class);
     }
-
-    @Test
-    void memberRegisterRequestSuccess() {
-        var member = new MemberRegisterRequest("toby@splearn.app", "Goby123", "secret");
-        Member member1 = memberRegister.register(member);
-        assertThat(member1.getId()).isNotNull();
-    }
-
-    @Test
-    void updateInfo() {
-        Member member = memberRegister.register(MemberFixture.createMemberRequest());
-
-        assertThat(member.getId()).isNotNull();
-
-        memberRegister.activate((member.getId()));
-
-        var memberInfoUpdateRequest = new MemberInfoUpdateRequest("toby123", "qwe123", "it's me Mario");
-        Member member1 = memberRegister.updateInfo(member.getId(), memberInfoUpdateRequest);
-
-        assertThat(member1.getNickname()).isEqualTo("toby123");
-        assertThat(member1.getMemberDetail().getProfile().address()).isEqualTo("qwe123");
-        assertThat(member1.getMemberDetail().getIntroduction()).isEqualTo("it's me Mario");
-
-    }
-
 }

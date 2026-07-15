@@ -1,5 +1,7 @@
 package tobyspring.splearn.application.member;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,9 +65,21 @@ public class MemberModifyService implements MemberRegister {
         Member member = memberFinder.findById(memberId);
         Assert.state(member.getStatus() == Status.ACTIVE, "현재 activate 상태가 아닙니다.");
 
+        checkDuplicateProfile(member, updateRequest.profileAddress());
+
         member.updateInfo(updateRequest);
 
         return memberRepository.save(member);
+    }
+
+    private void checkDuplicateProfile(Member member, @NotNull @Size(max = 15) String profileAddress) {
+        if (profileAddress.isEmpty()) return;
+        Profile currentProfile = member.getMemberDetail().getProfile();
+        if (currentProfile != null && currentProfile.address().equals(profileAddress)) return;
+
+        if (memberRepository.findByProfile(new Profile(profileAddress)).isPresent()) {
+            throw new DuplicateProfileException("이미 존재하는 프로필 주소입니다 : " + profileAddress);
+        }
     }
 
     private void sendWelcomeEmail(Member member) {

@@ -1,6 +1,5 @@
 package tobyspring.splearn.domain.member;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
